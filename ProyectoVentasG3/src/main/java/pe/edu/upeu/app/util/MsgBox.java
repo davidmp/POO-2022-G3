@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 * <li>QUESTION_MESSAGE</li></ol>
 * 
 * @see <a href = "https://github.com/davidmp" />Aqui Github</a>
+* @see <a href = "https://javadesde0.com/tag/que-es-joptionpane/" />Tutorial</a>
 * @return No hay retorno de metodos
 */
 public class MsgBox {
