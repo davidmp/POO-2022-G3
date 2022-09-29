@@ -6,24 +6,23 @@ package pe.edu.upeu.app.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import javax.swing.JFrame;
+
+import javax.swing.JPanel;
 
 /**
  *
  * @author LABORATORIO_2
  */
-public class Login extends JFrame{
+public class Login extends JPanel{
 
     /**
      * Creates new form Login
      */
     public Login() {
-        initComponents();
-        
-        
+        initComponents();               
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(new Dimension(screenSize.width/2, (screenSize.height)/2-36));
-        this.setVisible(true);
+        //this.setVisible(true);
         
     }
 

@@ -19,6 +19,7 @@ public class ProyectoVentasG3 {
     public static void main(String[] args) {
         //new MsgBox("Holas", JOptionPane.DEFAULT_OPTION, "");
         new GUIMain();
+        //new Login().setVisible(true);
         //Login l=new Login();
         //l.show();
        
