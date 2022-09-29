@@ -5,6 +5,9 @@
 
 package pe.edu.upeu.app;
 
+import javax.swing.JOptionPane;
+import pe.edu.upeu.app.util.MsgBox;
+
 /**
  *
  * @author LABORATORIO_2
@@ -12,6 +15,6 @@ package pe.edu.upeu.app;
 public class ProyectoVentasG3 {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        new MsgBox("Holas", JOptionPane.DEFAULT_OPTION, "");
     }
 }
