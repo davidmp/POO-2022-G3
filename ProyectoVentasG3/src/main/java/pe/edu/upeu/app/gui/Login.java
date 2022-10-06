@@ -4,6 +4,13 @@
  */
 package pe.edu.upeu.app.gui;
 
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import pe.edu.upeu.app.util.UtilsX;
+
 /**
  *
  * @author LABORATORIO_2
@@ -13,8 +20,23 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    UtilsX obj=new UtilsX();
+    Image image;
     public Login() {
         initComponents();
+        this.setTitle("Login SysCenterLife");
+        try {
+            image = ImageIO.read(obj.getFile("Alarm-Tick-icon.png"));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        this.setIconImage(image);
+        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(new Dimension(screenSize.width /4, (screenSize.height - 36) /4));
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     /**
@@ -97,11 +119,10 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        GUIMain guim=new GUIMain();
+        GUIMain guim = new GUIMain();
         guim.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
