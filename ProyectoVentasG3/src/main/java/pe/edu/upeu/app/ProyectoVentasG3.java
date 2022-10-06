@@ -6,7 +6,6 @@
 package pe.edu.upeu.app;
 
 
-import pe.edu.upeu.app.gui.GUIMain;
 import pe.edu.upeu.app.gui.Login;
 
 
@@ -18,7 +17,7 @@ public class ProyectoVentasG3 {
 
     public static void main(String[] args) {
         //new MsgBox("Holas", JOptionPane.DEFAULT_OPTION, "");
-        new GUIMain();
+        new Login().setVisible(true);
         //new Login().setVisible(true);
         //Login l=new Login();
         //l.show();
