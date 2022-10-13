@@ -36,7 +36,7 @@ public class GUIMain extends JFrame {
         menu1 = new JMenu("Archivo");
         jmI1 = new JMenuItem("Abrir");
         menuBar.add(menu1);
-        jmI2 = new JMenuItem("Guardar");
+        jmI2 = new JMenuItem("Adm. Cliente");
         menu1.add(jmI1);
         menu1.add(jmI2);
         menu1 = new JMenu("Ver");
@@ -47,7 +47,7 @@ public class GUIMain extends JFrame {
         MenuItemListener menuItemListener = new MenuItemListener();
         jmI1.addActionListener(menuItemListener);//accion
         jmI2.addActionListener(menuItemListener);
-
+        jtpane = new JTabbedPane();
         this.getContentPane().add(BorderLayout.NORTH, menuBar);
 //this.getContentPane().add(BorderLayout.CENTER, jtpane);
         this.setVisible(true);
@@ -61,7 +61,7 @@ public class GUIMain extends JFrame {
             System.out.println("pasa por aqui");
             Container contai = GUIMain.this.getContentPane();
             if (e.getSource() == jmI1) {
-                jtpane = new JTabbedPane();
+                jtpane.removeAll();
                 jp = new JPanel();
                 jtpane.add("Prueba", jp);
                 jp = new JPanel();
@@ -87,10 +87,9 @@ public class GUIMain extends JFrame {
             }
 
             if (e.getSource() == jmI2) {
-                jtpane.removeAll();
-                jtpane = new JTabbedPane();
-                jp = new JPanel();
-                jtpane.add("Prueba", jp);
+                jtpane.removeAll();                
+                MainCliente mc = new MainCliente();
+                jtpane.add("Cliente", mc);
                 contai.add(BorderLayout.CENTER, jtpane);
                 contai.invalidate();
                 contai.validate();
