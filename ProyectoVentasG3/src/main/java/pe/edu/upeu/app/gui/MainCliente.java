@@ -4,12 +4,18 @@
  */
 package pe.edu.upeu.app.gui;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import pe.edu.upeu.app.dao.ClienteDao;
 import pe.edu.upeu.app.dao.ClienteDaoI;
 import pe.edu.upeu.app.modelo.ClienteTO;
+import pe.edu.upeu.app.util.MsgBox;
 
 /**
  *
@@ -26,6 +32,7 @@ public class MainCliente extends javax.swing.JPanel {
      */
     ClienteDaoI cDao;
     DefaultTableModel modelo;
+    TableRowSorter<TableModel> trsfiltro;
 
     public MainCliente() {
         initComponents();
@@ -90,6 +97,7 @@ public class MainCliente extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        txtDatoFiltrar = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
@@ -110,6 +118,12 @@ public class MainCliente extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Gestión de clientes");
 
+        txtDatoFiltrar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDatoFiltrarKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -117,7 +131,9 @@ public class MainCliente extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtDatoFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,6 +141,10 @@ public class MainCliente extends javax.swing.JPanel {
                 .addGap(38, 38, 38)
                 .addComponent(jLabel1)
                 .addContainerGap(19, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtDatoFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 204));
@@ -224,6 +244,11 @@ public class MainCliente extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(0);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(200);
+        }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -320,10 +345,14 @@ public class MainCliente extends javax.swing.JPanel {
                 modelo = (DefaultTableModel) jTable1.getModel();
                 int rowx = jTable1.getSelectedRow();
                 Object valor = jTable1.getValueAt(rowx, 1);
-                JOptionPane.showMessageDialog(this, valor);
-                modelo.removeRow(rowx);
-                cDao.delete(valor.toString());
-                resetForm();
+
+                MsgBox mb = new MsgBox();
+                if (mb.showConfirmCustom("Desea eliminar este registro?", "Mensaje de Confirmacion", "") == 0) {
+                    modelo.removeRow(rowx);
+                    cDao.delete(valor.toString());
+                    resetForm();
+                }
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
@@ -345,6 +374,23 @@ public class MainCliente extends javax.swing.JPanel {
         jTable1.getSelectionModel().clearSelection();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
+    private void txtDatoFiltrarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDatoFiltrarKeyTyped
+        // TODO add your handling code here:
+        txtDatoFiltrar.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String cadena = (txtDatoFiltrar.getText());
+                System.out.println("v:" + cadena);
+                txtDatoFiltrar.setText(cadena);
+                repaint();
+                trsfiltro.setRowFilter(RowFilter.regexFilter(txtDatoFiltrar.getText()));
+            }
+        });
+        System.out.println("llego");
+        trsfiltro = new TableRowSorter(jTable1.getModel());
+        jTable1.setRowSorter(trsfiltro);   
+    }//GEN-LAST:event_txtDatoFiltrarKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;
@@ -361,6 +407,7 @@ public class MainCliente extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField txtDatoFiltrar;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
