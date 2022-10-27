@@ -128,7 +128,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="fondoPanel1" max="32767" attributes="0"/>
@@ -150,9 +150,18 @@
                                               <Component id="btnEliminar" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Component id="txtDni" min="-2" pref="146" max="-2" attributes="0"/>
-                                          <Component id="cbxTipo" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                                          <Component id="toastMsg1" alignment="0" min="-2" pref="159" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                                  <Component id="txtDato2" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="txtDato1" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="cbxTipo" alignment="0" pref="111" max="32767" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="jDateChooser1" min="-2" pref="126" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -185,7 +194,16 @@
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbxTipo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="58" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txtDato1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jDateChooser1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtDato2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="toastMsg1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="fondoPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -258,7 +276,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                           <Component id="panelBorder1" min="-2" pref="198" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -267,9 +285,9 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Component id="panelBorder1" min="-2" pref="125" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="15" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -295,6 +313,23 @@
                 </Container>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JTextField" name="txtDato1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="12/02/2022"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtDato2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="a@upeu.pe"/>
+              </Properties>
+            </Component>
+            <Component class="pe.edu.upeu.app.components.ToastMsg" name="toastMsg1">
+            </Component>
+            <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.toedter.calendar.JDateChooser(&quot;dd/MM/yyyy&quot;,&quot;##/##/####&quot;,&apos;_&apos;)"/>
+              </AuxValues>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel4">
@@ -307,12 +342,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="492" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="409" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="436" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

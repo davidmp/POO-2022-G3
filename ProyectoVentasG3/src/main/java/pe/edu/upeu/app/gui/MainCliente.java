@@ -115,6 +115,10 @@ public class MainCliente extends javax.swing.JPanel {
         fondoPanel1 = new pe.edu.upeu.app.components.FondoPanel("fondo2.jpg",60);
         panelBorder1 = new pe.edu.upeu.app.components.PanelBorder();
         jLabel5 = new javax.swing.JLabel();
+        txtDato1 = new javax.swing.JTextField();
+        txtDato2 = new javax.swing.JTextField();
+        toastMsg1 = new pe.edu.upeu.app.components.ToastMsg();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser("dd/MM/yyyy","##/##/####",'_');
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -196,17 +200,21 @@ public class MainCliente extends javax.swing.JPanel {
         fondoPanel1Layout.setHorizontalGroup(
             fondoPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fondoPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(24, 24, 24)
                 .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         fondoPanel1Layout.setVerticalGroup(
             fondoPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fondoPanel1Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
+                .addGap(20, 20, 20)
                 .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
+
+        txtDato1.setText("12/02/2022");
+
+        txtDato2.setText("a@upeu.pe");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -232,8 +240,15 @@ public class MainCliente extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnEliminar))
                                     .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(toastMsg1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtDato2, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtDato1, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbxTipo, javax.swing.GroupLayout.Alignment.LEADING, 0, 111, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 11, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -256,7 +271,15 @@ public class MainCliente extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDato1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDato2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(toastMsg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(fondoPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -287,11 +310,11 @@ public class MainCliente extends javax.swing.JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -338,7 +361,9 @@ public class MainCliente extends javax.swing.JPanel {
         List<ValidatorItem> vals=new ArrayList<>();
         vals.add(new ValidatorItem("required|number|min:8|max:8", txtDni, "DNI"));
         vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
-        vals.add(new ValidatorItem("required", cbxTipo, "Tipo"));        
+        vals.add(new ValidatorItem("required", cbxTipo, "Tipo")); 
+        vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
+        vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
         
         cDao = new ClienteDao();
         ClienteTO to = new ClienteTO();
@@ -369,8 +394,11 @@ public class MainCliente extends javax.swing.JPanel {
                     Object nuevo[] = {modelo.getRowCount() + 1, to.getDniruc(), to.getNombrers(), to.getTipo()};
                     modelo.addRow(nuevo);
                     resetForm();
-                    JOptionPane.showMessageDialog(this, "Registro correcto");
+                   // JOptionPane.showMessageDialog(this, "Registro correcto");
+                   toastMsg1.success("Se registro correctamente");
                 }
+                }else{
+                 toastMsg1.error("corrija los valores del formu");
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
@@ -392,6 +420,7 @@ public class MainCliente extends javax.swing.JPanel {
                     modelo.removeRow(rowx);
                     cDao.delete(valor.toString());
                     resetForm();
+                    toastMsg1.success("Elimo correctamente");
                 }
 
             } catch (Exception e) {
@@ -439,6 +468,7 @@ public class MainCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> cbxTipo;
     private pe.edu.upeu.app.components.FondoPanel fondoPanel1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -451,6 +481,9 @@ public class MainCliente extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private pe.edu.upeu.app.components.PanelBorder panelBorder1;
+    private pe.edu.upeu.app.components.ToastMsg toastMsg1;
+    private javax.swing.JTextField txtDato1;
+    private javax.swing.JTextField txtDato2;
     private javax.swing.JTextField txtDatoFiltrar;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtNombre;
