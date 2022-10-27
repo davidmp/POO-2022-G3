@@ -27,6 +27,11 @@
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.davidmp</groupId>
+            <artifactId>SysSwingDmp</artifactId>
+            <version>v1.4</version>
+        </dependency>
 
     </dependencies>
     

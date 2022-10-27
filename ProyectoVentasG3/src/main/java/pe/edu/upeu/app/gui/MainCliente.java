@@ -6,12 +6,15 @@ package pe.edu.upeu.app.gui;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import pe.com.syscenterlife.formvalid.Validator;
+import pe.com.syscenterlife.formvalid.ValidatorItem;
 import pe.edu.upeu.app.dao.ClienteDao;
 import pe.edu.upeu.app.dao.ClienteDaoI;
 import pe.edu.upeu.app.modelo.ClienteTO;
@@ -182,6 +185,7 @@ public class MainCliente extends javax.swing.JPanel {
         jLabel4.setText("Tipo:");
 
         cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar" }));
+        cbxTipo.setSelectedIndex(-1);
 
         jLabel5.setText("jLabel5");
         panelBorder1.add(jLabel5);
@@ -201,7 +205,7 @@ public class MainCliente extends javax.swing.JPanel {
             .addGroup(fondoPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -252,8 +256,8 @@ public class MainCliente extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(fondoPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(fondoPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -331,11 +335,16 @@ public class MainCliente extends javax.swing.JPanel {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
+        List<ValidatorItem> vals=new ArrayList<>();
+        vals.add(new ValidatorItem("required|number|min:8|max:8", txtDni, "DNI"));
+        vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
+        vals.add(new ValidatorItem("required", cbxTipo, "Tipo"));        
+        
         cDao = new ClienteDao();
         ClienteTO to = new ClienteTO();
         to.setDniruc(txtDni.getText());
         to.setNombrers(txtNombre.getText());
-        to.setTipo(cbxTipo.getSelectedItem().toString());
+        to.setTipo(cbxTipo.getSelectedItem()==null?"":cbxTipo.getSelectedItem().toString());
         int fila = jTable1.getSelectedRow();
         if (fila != -1) {
             try {
@@ -353,12 +362,15 @@ public class MainCliente extends javax.swing.JPanel {
             }
         } else {
             try {
+                Validator valid=new Validator(vals);
+                if(valid.isPasses()){
                 if (cDao.create(to) != 0) {
                     modelo = (DefaultTableModel) jTable1.getModel();
                     Object nuevo[] = {modelo.getRowCount() + 1, to.getDniruc(), to.getNombrers(), to.getTipo()};
                     modelo.addRow(nuevo);
                     resetForm();
                     JOptionPane.showMessageDialog(this, "Registro correcto");
+                }
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());

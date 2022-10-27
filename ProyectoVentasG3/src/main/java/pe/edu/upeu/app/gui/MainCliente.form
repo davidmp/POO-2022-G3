@@ -185,8 +185,8 @@
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbxTipo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="fondoPanel1" max="32767" attributes="0"/>
+                      <EmptySpace pref="58" max="32767" attributes="0"/>
+                      <Component id="fondoPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -243,6 +243,7 @@
                     <StringItem index="0" value="Seleccionar"/>
                   </StringArray>
                 </Property>
+                <Property name="selectedIndex" type="int" value="-1"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -268,7 +269,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                           <Component id="panelBorder1" min="-2" pref="125" max="-2" attributes="0"/>
-                          <EmptySpace pref="46" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
