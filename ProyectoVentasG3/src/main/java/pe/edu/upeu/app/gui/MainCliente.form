@@ -158,7 +158,10 @@
                                                   <Component id="cbxTipo" alignment="0" pref="111" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="jDateChooser1" min="-2" pref="126" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="jDateChooser1" pref="126" max="32767" attributes="0"/>
+                                                  <Component id="txtDateV" max="32767" attributes="0"/>
+                                              </Group>
                                           </Group>
                                       </Group>
                                       <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
@@ -200,7 +203,10 @@
                           <Component id="jDateChooser1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtDato2" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtDato2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDateV" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="toastMsg1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
@@ -329,6 +335,11 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.toedter.calendar.JDateChooser(&quot;dd/MM/yyyy&quot;,&quot;##/##/####&quot;,&apos;_&apos;)"/>
               </AuxValues>
+            </Component>
+            <Component class="pe.edu.upeu.app.components.JHintTextField" name="txtDateV">
+              <Properties>
+                <Property name="hintText" type="java.lang.String" value="dd/MM/yyyy"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

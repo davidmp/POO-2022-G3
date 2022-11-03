@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
+import pe.edu.upeu.app.dao.conx.Conexion;
 import pe.edu.upeu.app.dao.conx.Conn;
+import pe.edu.upeu.app.dao.conx.ConnS;
 import pe.edu.upeu.app.modelo.ClienteTO;
 import pe.edu.upeu.app.util.ErrorLogger;
 
@@ -26,7 +28,7 @@ public class ClienteDao implements ClienteDaoI {
     Statement stmt = null;
     Vector columnNames;
     Vector visitdata;
-    Connection connection = Conn.connectSQLite();
+    Connection connection = ConnS.getInstance().getConnection();
     static PreparedStatement ps;
     static ErrorLogger log = new ErrorLogger(ClienteDao.class.getName());
     ResultSet rs = null;
@@ -44,7 +46,7 @@ public class ClienteDao implements ClienteDaoI {
                 + "VALUES(?,?,?)";
         int i = 0;
         try {
-            ps = connection.prepareStatement(sql, returns);
+            ps = new Conexion().connectSQLite().prepareStatement(sql, returns);
             ps.setString(++i, d.getDniruc());
             ps.setString(++i, d.getNombrers());
             ps.setString(++i, d.getTipo());
@@ -72,7 +74,8 @@ public class ClienteDao implements ClienteDaoI {
                 + "WHERE dniruc=?";
         int i = 0;
         try {
-            ps = connection.prepareStatement(sql);
+            //new Conexion().connectSQLite()
+            ps = new Conexion().connectSQLite().prepareStatement(sql);
             ps.setString(++i, d.getNombrers());
             ps.setString(++i, d.getTipo());
             ps.setString(++i, d.getDniruc());
@@ -112,7 +115,7 @@ public class ClienteDao implements ClienteDaoI {
         List<ClienteTO> listarclientes = new ArrayList();
         String sql = "SELECT * FROM cliente";
         try {
-            connection = new Conn().connectSQLite();
+            connection = new Conexion().connectSQLite();
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -133,7 +136,7 @@ public class ClienteDao implements ClienteDaoI {
         ClienteTO cliente = new ClienteTO();
         String sql = "SELECT * FROM cliente WHERE dniruc = ?";
         try {
-            connection = new Conn().connectSQLite();
+            //connection = new Conn().connectSQLite();
             ps = connection.prepareStatement(sql);
             ps.setString(1, dni);
             rs = ps.executeQuery();
