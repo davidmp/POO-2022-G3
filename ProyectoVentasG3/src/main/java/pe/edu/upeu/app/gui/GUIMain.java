@@ -90,11 +90,18 @@ public class GUIMain extends JFrame {
 
             if (e.getSource() == jmI2) {
                 System.out.println("verrr");
+                
                 MainCliente mc = new MainCliente();
                 scrollPane = new JScrollPane(mc);
                 scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
                 jtpane.add("Adm. Cliente", scrollPane);
+                
+                MainVentas mv = new MainVentas();
+                scrollPane = new JScrollPane(mv);
+                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                jtpane.add("G. Ventas", scrollPane);
                 
                 contai.add(BorderLayout.CENTER, jtpane);
                 contai.invalidate();

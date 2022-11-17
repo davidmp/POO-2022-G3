@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
+import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
 import pe.edu.upeu.app.dao.conx.Conexion;
 import pe.edu.upeu.app.dao.conx.Conn;
 import pe.edu.upeu.app.dao.conx.ConnS;
@@ -46,7 +47,7 @@ public class ClienteDao implements ClienteDaoI {
                 + "VALUES(?,?,?)";
         int i = 0;
         try {
-            ps = new Conexion().connectSQLite().prepareStatement(sql, returns);
+            ps = connection.prepareStatement(sql, returns);
             ps.setString(++i, d.getDniruc());
             ps.setString(++i, d.getNombrers());
             ps.setString(++i, d.getTipo());
@@ -75,7 +76,7 @@ public class ClienteDao implements ClienteDaoI {
         int i = 0;
         try {
             //new Conexion().connectSQLite()
-            ps = new Conexion().connectSQLite().prepareStatement(sql);
+            ps = connection.prepareStatement(sql);
             ps.setString(++i, d.getNombrers());
             ps.setString(++i, d.getTipo());
             ps.setString(++i, d.getDniruc());
@@ -115,7 +116,7 @@ public class ClienteDao implements ClienteDaoI {
         List<ClienteTO> listarclientes = new ArrayList();
         String sql = "SELECT * FROM cliente";
         try {
-            connection = new Conexion().connectSQLite();
+            //connection = new Conexion().connectSQLite();
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -154,6 +155,28 @@ public class ClienteDao implements ClienteDaoI {
     @Override
     public void reportarCliente() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<ModeloDataAutocomplet> listAutoComplet(String filter) {
+        List<ModeloDataAutocomplet> listarclientes = new ArrayList();
+        String sql = "SELECT * FROM cliente WHERE nombrers like ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, filter + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ModeloDataAutocomplet data = new ModeloDataAutocomplet();
+                ModeloDataAutocomplet.TIPE_DISPLAY = "ID";
+                data.setIdx(rs.getString("dniruc"));
+                data.setNombreDysplay(rs.getString("nombrers"));
+                data.setOtherData(rs.getString("tipo"));
+                listarclientes.add(data);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+        return listarclientes;
     }
 
 }
