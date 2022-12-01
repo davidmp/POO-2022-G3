@@ -4,13 +4,28 @@
  */
 package pe.edu.upeu.app.gui;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import pe.com.syscenterlife.autocomp.AutoCompleteTextField;
 import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
+import pe.com.syscenterlife.jtablecomp.ButtonsEditor;
+import pe.com.syscenterlife.jtablecomp.ButtonsPanel;
+import pe.com.syscenterlife.jtablecomp.ButtonsRenderer;
+import pe.edu.upeu.app.dao.CarritoDao;
+import pe.edu.upeu.app.dao.CarritoDaoI;
 import pe.edu.upeu.app.dao.ClienteDao;
 import pe.edu.upeu.app.dao.ClienteDaoI;
+import pe.edu.upeu.app.dao.ProductoDAO;
+import pe.edu.upeu.app.dao.ProductoDaoI;
+import pe.edu.upeu.app.dao.VentaDao;
+import pe.edu.upeu.app.dao.VentaDaoI;
+import pe.edu.upeu.app.modelo.CarritoTO;
+import pe.edu.upeu.app.modelo.ProductoTO;
 
 /**
  *
@@ -18,9 +33,9 @@ import pe.edu.upeu.app.dao.ClienteDaoI;
  */
 public class MainVentas extends javax.swing.JPanel {
 
-    /**
-     * Creates new form MainVentas
-     */
+    
+    DefaultTableModel modelo;
+    CarritoDaoI daoCa;
     public MainVentas() {
         initComponents();
         ClienteDaoI daoC = new ClienteDao();
@@ -34,25 +49,85 @@ public class MainVentas extends javax.swing.JPanel {
                         && AutoCompleteTextField.dataGetReturnet != null) {
                     txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getNombreDysplay());
                     txtDireccion.setText(AutoCompleteTextField.dataGetReturnet.getOtherData());
-                   /* if (ModeloDataAutocomplet.TIPE_DISPLAY.equals("ID") && txtDniAutoComp.getText().equals(AutoCompleteTextField.dataGetReturnet.getIdx())) {
-                        txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getNombreDysplay());
-                    } else if (ModeloDataAutocomplet.TIPE_DISPLAY.equals("NAME")
-                            && txtDniAutoComp.getText().equals(AutoCompleteTextField.dataGetReturnet.getNombreDysplay())) {
-                        txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getIdx());
-                    } else if (ModeloDataAutocomplet.TIPE_DISPLAY.equals("OTHER")
-                            && txtDniAutoComp.getText().equals(AutoCompleteTextField.dataGetReturnet.getOtherData())) {
-                        System.out.println("Valor:" + txtDniAutoComp.getText());
-                        System.out.println("Valor:" + AutoCompleteTextField.dataGetReturnet.getIdx() + "\tContenido:"
-                                + AutoCompleteTextField.dataGetReturnet.getNombreDysplay());
-                        txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getIdx());
-                    } else {
-                        System.out.println("Valor:" + txtDniAutoComp.getText());
-                        txtNombre.setText("");
-                    }*/
+                    listarCarrito(txtDniAutoComp.getText());
+                    /* if (ModeloDataAutocomplet.TIPE_DISPLAY.equals("ID") && txtDniAutoComp.getText().equals(AutoCompleteTextField.dataGetReturnet.getIdx())) {
+                         txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getNombreDysplay());
+                     } else if (ModeloDataAutocomplet.TIPE_DISPLAY.equals("NAME")
+                             && txtDniAutoComp.getText().equals(AutoCompleteTextField.dataGetReturnet.getNombreDysplay())) {
+                         txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getIdx());
+                     } else if (ModeloDataAutocomplet.TIPE_DISPLAY.equals("OTHER")
+                             && txtDniAutoComp.getText().equals(AutoCompleteTextField.dataGetReturnet.getOtherData())) {
+                         System.out.println("Valor:" + txtDniAutoComp.getText());
+                         System.out.println("Valor:" + AutoCompleteTextField.dataGetReturnet.getIdx() + "\tContenido:"
+                                 + AutoCompleteTextField.dataGetReturnet.getNombreDysplay());
+                         txtNombre.setText(AutoCompleteTextField.dataGetReturnet.getIdx());
+                     } else {
+                         System.out.println("Valor:" + txtDniAutoComp.getText());
+                         txtNombre.setText("");
+                     }*/
                 }
             }
         });
-
+         
+        ProductoDaoI daoP=new ProductoDAO();
+        List<ModeloDataAutocomplet> itemsP=daoP.listAutoComplet("");
+        AutoCompleteTextField.setupAutoComplete(txtProducto, itemsP, "ID");
+        txtProducto.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if ((e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
+                        && AutoCompleteTextField.dataGetReturnet != null) {
+                    txtCodigo.setText(AutoCompleteTextField.dataGetReturnet.getNombreDysplay());
+                    String[] dataX=AutoCompleteTextField.dataGetReturnet.getOtherData().split(":");
+                    txtPUnit.setText(dataX[0]);
+                    txtStock.setText(dataX[1]);
+                }
+            }        
+        });
+        
+        txtCantidad.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                double valor=Double.parseDouble(txtCantidad.getText())*Double.parseDouble(txtPUnit.getText());
+                txtPtotal.setText(""+valor);
+            }        
+        });
+        
+    }
+    
+    public void listarCarrito(String dni) {
+    daoCa = new CarritoDao();
+    List<CarritoTO> listarCleintes = daoCa.lista(dni);
+    jTable1.setAutoCreateRowSorter(true);
+    modelo = (DefaultTableModel) jTable1.getModel(); 
+    
+    ButtonsPanel.metaDataButtons=new String[][]{{"","del-icon.png"}};
+    jTable1.setRowHeight(40);
+    TableColumn column=jTable1.getColumnModel().getColumn(8);
+    column.setCellRenderer(new ButtonsRenderer());
+    ButtonsEditor be=new ButtonsEditor(jTable1);
+    column.setCellEditor(be);
+    
+    modelo.setNumRows(0);
+    Object[] ob = new Object[9];    
+    for (int i = 0; i < listarCleintes.size(); i++) {
+        int x=-1;
+        ob[++x] = listarCleintes.get(i).getIdCarrito();
+        ob[++x] = listarCleintes.get(i).getDniruc();
+        ob[++x] = listarCleintes.get(i).getIdProducto();
+        ob[++x] = listarCleintes.get(i).getNombreProducto();
+        ob[++x] = listarCleintes.get(i).getCantidad();
+        ob[++x] = listarCleintes.get(i).getPunitario();
+        ob[++x] = listarCleintes.get(i).getPtotal();
+        ob[++x] = listarCleintes.get(i).getEstado();
+        ob[++x]="";
+        modelo.addRow(ob);
+    }
+    jTable1.setModel(modelo);
+        JButton bd=be.getCellEditorValue().buttons.get(0);
+        bd.addActionListener((ActionEvent e) -> {
+            
+        });
     }
 
     /**
@@ -74,19 +149,21 @@ public class MainVentas extends javax.swing.JPanel {
         txtDireccion = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtProducto = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtCodigo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtStock = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        txtCantidad = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        txtPUnit = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        txtPtotal = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jTextField10 = new javax.swing.JTextField();
@@ -167,6 +244,11 @@ public class MainVentas extends javax.swing.JPanel {
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/data-add-icon.png"))); // NOI18N
         jButton2.setText("Add");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -175,14 +257,14 @@ public class MainVentas extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(57, 57, 57)
@@ -190,18 +272,18 @@ public class MainVentas extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,26 +301,38 @@ public class MainVentas extends javax.swing.JPanel {
                             .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "DNI/RUC", "Id. Product", "Producto", "Cantidad", "P. Unitario S/.", "P. Total S/.", "Estado", "Opc"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 129, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(204, 255, 255));
@@ -297,7 +391,7 @@ public class MainVentas extends javax.swing.JPanel {
                             .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -323,9 +417,25 @@ public class MainVentas extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        CarritoTO to=new CarritoTO();
+        to.setDniruc(txtDniAutoComp.getText());
+        to.setIdProducto(Integer.parseInt(txtCodigo.getText()));
+        to.setNombreProducto(txtProducto.getText());
+        to.setPunitario(Double.parseDouble(txtPUnit.getText()));
+        to.setPtotal(Double.parseDouble(txtPtotal.getText()));
+        to.setCantidad(Double.parseDouble(txtCantidad.getText()));
+        to.setEstado(0);
+        daoCa=new CarritoDao();
+        daoCa.crear(to);
+        listarCarrito(txtDniAutoComp.getText());
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -349,18 +459,20 @@ public class MainVentas extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtDniAutoComp;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPUnit;
+    private javax.swing.JTextField txtProducto;
+    private javax.swing.JTextField txtPtotal;
+    private javax.swing.JTextField txtStock;
     // End of variables declaration//GEN-END:variables
 }
