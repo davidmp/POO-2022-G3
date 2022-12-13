@@ -37,7 +37,7 @@ public class Login extends javax.swing.JFrame {
         this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
         this.setResizable(false);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(new Dimension(screenSize.width / 4, (screenSize.height - 36) / 4));
+        this.setSize(new Dimension(screenSize.width / 2, (screenSize.height - 36) / 2));
 
         Image scaleImage = image2.getScaledInstance(imgX.getWidth(),
                 imgX.getHeight(), Image.SCALE_DEFAULT);

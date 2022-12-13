@@ -7,10 +7,23 @@ package pe.edu.upeu.app.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import pe.com.syscenterlife.autocomp.AutoCompleteTextField;
 import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
 import pe.com.syscenterlife.jtablecomp.ButtonsEditor;
@@ -24,8 +37,11 @@ import pe.edu.upeu.app.dao.ProductoDAO;
 import pe.edu.upeu.app.dao.ProductoDaoI;
 import pe.edu.upeu.app.dao.VentaDao;
 import pe.edu.upeu.app.dao.VentaDaoI;
+import pe.edu.upeu.app.dao.conx.ConnS;
 import pe.edu.upeu.app.modelo.CarritoTO;
 import pe.edu.upeu.app.modelo.ProductoTO;
+import pe.edu.upeu.app.modelo.VentaDetalleTO;
+import pe.edu.upeu.app.modelo.VentaTO;
 
 /**
  *
@@ -36,6 +52,8 @@ public class MainVentas extends javax.swing.JPanel {
     
     DefaultTableModel modelo;
     CarritoDaoI daoCa;
+    VentaDaoI daoV;
+    
     public MainVentas() {
         initComponents();
         ClienteDaoI daoC = new ClienteDao();
@@ -95,7 +113,7 @@ public class MainVentas extends javax.swing.JPanel {
         
     }
     
-    public void listarCarrito(String dni) {
+    public List<CarritoTO> listarCarrito(String dni) {
     daoCa = new CarritoDao();
     List<CarritoTO> listarCleintes = daoCa.lista(dni);
     jTable1.setAutoCreateRowSorter(true);
@@ -109,7 +127,8 @@ public class MainVentas extends javax.swing.JPanel {
     column.setCellEditor(be);
     
     modelo.setNumRows(0);
-    Object[] ob = new Object[9];    
+    Object[] ob = new Object[9]; 
+    double impoTotal = 0, igv = 0;
     for (int i = 0; i < listarCleintes.size(); i++) {
         int x=-1;
         ob[++x] = listarCleintes.get(i).getIdCarrito();
@@ -121,13 +140,31 @@ public class MainVentas extends javax.swing.JPanel {
         ob[++x] = listarCleintes.get(i).getPtotal();
         ob[++x] = listarCleintes.get(i).getEstado();
         ob[++x]="";
+        impoTotal += Double.parseDouble(String.valueOf(listarCleintes.get(i).getPtotal()));
         modelo.addRow(ob);
     }
-    jTable1.setModel(modelo);
-        JButton bd=be.getCellEditorValue().buttons.get(0);
-        bd.addActionListener((ActionEvent e) -> {
-            
+        JButton btnDel = be.getCellEditorValue().buttons.get(0);
+        btnDel.addActionListener((ActionEvent e) -> {
+            System.out.println("VERRRRRR:");
+            int row
+                    = jTable1.convertRowIndexToModel(jTable1.getEditingRow());
+            Object o = jTable1.getModel().getValueAt(row, 0);
+            daoCa = new CarritoDao();
+            try {
+                daoCa.delete(Integer.parseInt(String.valueOf(o)));
+                listarCarrito(dni);
+            } catch (Exception ex) {
+                System.err.println("Error:" + ex.getMessage());
+            }
+            System.out.println("AAAA:" + String.valueOf(o));
+            JOptionPane.showMessageDialog(this, "Editing: " + o);
         });
+        jTable1.setModel(modelo);
+        txtImporteTotal.setText(String.valueOf(impoTotal));
+        double pv = impoTotal / 1.18;
+        txtPrecioB.setText(String.valueOf(Math.round(pv * 100.0) / 100.0));
+        txtIgv.setText(String.valueOf(Math.round((pv * 0.18) * 100.0) / 100.0));
+        return listarCleintes;
     }
 
     /**
@@ -166,13 +203,13 @@ public class MainVentas extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        txtPrecioB = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        txtIgv = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jTextField12 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
+        txtImporteTotal = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 204));
@@ -347,6 +384,11 @@ public class MainVentas extends javax.swing.JPanel {
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/shop-cart-add-icon.png"))); // NOI18N
         jButton3.setText("R. Ventas");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -355,11 +397,11 @@ public class MainVentas extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPrecioB, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIgv, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -368,7 +410,7 @@ public class MainVentas extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtImporteTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -387,10 +429,10 @@ public class MainVentas extends javax.swing.JPanel {
                             .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPrecioB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtIgv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtImporteTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -437,6 +479,69 @@ public class MainVentas extends javax.swing.JPanel {
         listarCarrito(txtDniAutoComp.getText());
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        registarVenta();
+    }//GEN-LAST:event_jButton3ActionPerformed
+    public void registarVenta() {
+        daoV = new VentaDao();
+
+        List<CarritoTO> lista = listarCarrito(txtDniAutoComp.getText());
+        VentaTO tov = new VentaTO();
+        tov.setDniruc(txtDniAutoComp.getText());
+        tov.setIgv(Double.parseDouble(txtIgv.getText()));
+        tov.setPrecioBase(Double.parseDouble(txtPrecioB.getText()));
+        tov.setPrecioTotal(Double.parseDouble(txtImporteTotal.getText()));
+        int idx = daoV.createVenta(tov);
+        if (idx != 0) {
+            for (CarritoTO carritoTO : lista) {
+                daoV = new VentaDao();
+                VentaDetalleTO vd = new VentaDetalleTO();
+                vd.setIdVenta(idx);
+                vd.setIdProducto(carritoTO.getIdProducto());
+                vd.setCantidad(carritoTO.getCantidad());
+                vd.setPu(carritoTO.getPunitario());
+                vd.setSubTotal(carritoTO.getPtotal());
+                vd.setDescuento(0);
+                daoV.createVentaDetalle(vd);
+            }
+        }
+        limpiarCarrito();
+        runReport1(idx);
+
+    }
+    
+    public void limpiarCarrito() {
+        daoCa = new CarritoDao();
+        daoCa.deleteCarAll(txtDniAutoComp.getText());
+        listarCarrito(txtDniAutoComp.getText());
+    }    
+    
+    private void runReport1(int idventa) {
+        try {
+            ConnS instance = ConnS.getInstance();
+            HashMap param = new HashMap();
+            String imgen = getFile("upeulogo.png").getAbsolutePath(); 
+             param.put("idventa", idventa);
+            param.put("imagen", imgen);                       
+            JasperDesign jdesign = JRXmlLoader.load(getFile("Comprobante.jrxml"));
+            JasperReport jreport = JasperCompileManager.compileReport(jdesign);
+            JasperPrint jprint = JasperFillManager.fillReport(jreport, param,
+                    instance.getConnection());
+            JasperViewer.viewReport(jprint, false);
+        } catch (JRException ex) {
+            System.out.println("Error:\n" + ex.getLocalizedMessage());
+        }
+    }
+
+    public File getFile(String filex) {
+        File newFolder = new File("jasper");
+        String ruta = newFolder.getAbsolutePath();
+        //CAMINO = Paths.get(ruta+"/"+"reporte1.jrxml"); 
+        Path CAMINO = Paths.get(ruta + "/" + filex);
+        System.out.println("Llegasss Ruta 2:" + CAMINO.toFile().getAbsolutePath());
+        return CAMINO.toFile();
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -461,16 +566,16 @@ public class MainVentas extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtDniAutoComp;
+    private javax.swing.JTextField txtIgv;
+    private javax.swing.JTextField txtImporteTotal;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPUnit;
+    private javax.swing.JTextField txtPrecioB;
     private javax.swing.JTextField txtProducto;
     private javax.swing.JTextField txtPtotal;
     private javax.swing.JTextField txtStock;
