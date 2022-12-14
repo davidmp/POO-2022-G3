@@ -29,7 +29,9 @@ public class ClienteDao implements ClienteDaoI {
     Statement stmt = null;
     Vector columnNames;
     Vector visitdata;
-    Connection connection = ConnS.getInstance().getConnection();
+    ConnS instance=ConnS.getInstance();
+    Connection connection=instance.getConnection();
+    
     static PreparedStatement ps;
     static ErrorLogger log = new ErrorLogger(ClienteDao.class.getName());
     ResultSet rs = null;
