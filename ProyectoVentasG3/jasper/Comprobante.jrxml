@@ -10,6 +10,7 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["E:\\POO\\POO-2022-G3\\ProyectoVentasG3\\jasper\\"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="ruta" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select * from venta where id_venta=$P{idventa}]]>
 	</queryString>
@@ -104,7 +105,7 @@
 					<subreportParameterExpression><![CDATA[$F{id_venta}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "DetalleComprobante.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{ruta}+"/DetalleComprobante.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

@@ -524,6 +524,7 @@ public class MainVentas extends javax.swing.JPanel {
             String imgen = getFile("upeulogo.png").getAbsolutePath(); 
              param.put("idventa", idventa);
             param.put("imagen", imgen);                       
+            param.put("ruta", new File("jasper").getAbsoluteFile());                       
             JasperDesign jdesign = JRXmlLoader.load(getFile("Comprobante.jrxml"));
             JasperReport jreport = JasperCompileManager.compileReport(jdesign);
             JasperPrint jprint = JasperFillManager.fillReport(jreport, param,
