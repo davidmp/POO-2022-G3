@@ -20,11 +20,11 @@
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="6" y="2" width="157" height="20" uuid="60f2806a-2b5e-4fb0-b708-d8f61f391812"/>
+				<reportElement x="2" y="2" width="157" height="20" uuid="60f2806a-2b5e-4fb0-b708-d8f61f391812"/>
 				<textFieldExpression><![CDATA[""+$F{productox}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="199" y="2" width="58" height="20" uuid="144b6ef6-5f87-4bf1-b64d-c563cd6b4c66"/>
+				<reportElement x="196" y="2" width="58" height="20" uuid="144b6ef6-5f87-4bf1-b64d-c563cd6b4c66"/>
 				<textFieldExpression><![CDATA[""+$F{pu}]]></textFieldExpression>
 			</textField>
 			<textField>
